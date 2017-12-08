@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/accPrefs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Account Preferences"
+        android:textAlignment="center"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/editName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        tools:hint="Name" />
+
+    <EditText
+        android:id="@+id/editEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="person@gmail.com"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/editPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="###-###-####"
+        android:inputType="phone" />
+
+    <EditText
+        android:id="@+id/editLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="City, State"
+        android:inputType="textPersonName" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="18dp"
+        android:paddingBottom="18dp"
+        android:paddingLeft="8dp" >
+
+        <TextView
+            android:id="@+id/searchDistance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Search Distance:"
+            android:textSize="18sp" />
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="14dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="18dp"
+        android:paddingLeft="8dp" >
+
+        <TextView
+            android:id="@+id/accType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Account Type"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/pSeeker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Project Seeker" />
+
+        <RadioButton
+            android:id="@+id/pOwner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Project Owner" />
+    </LinearLayout>
+
+</LinearLayout>
