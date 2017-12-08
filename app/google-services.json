@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "754646177089",
+    "firebase_url": "https://pinder-d3098.firebaseio.com",
+    "project_id": "pinder-d3098",
+    "storage_bucket": "pinder-d3098.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:754646177089:android:08b16093182ddfdd",
+        "android_client_info": {
+          "package_name": "team1008.b17.cs4518.wpi.pinderapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "754646177089-g8a5vptpmilactuc6r0s1lvhqt63kjuf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "team1008.b17.cs4518.wpi.pinderapp",
+            "certificate_hash": "0362f3cabec50a12219b2cab29fe6471d4179d2d"
+          }
+        },
+        {
+          "client_id": "754646177089-a6ntilnrek3po9udhraqa4sqsu9ms6p0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgprmmJbykbkKyWPo5J30VVw0aB7DnmXU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "754646177089-a6ntilnrek3po9udhraqa4sqsu9ms6p0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
