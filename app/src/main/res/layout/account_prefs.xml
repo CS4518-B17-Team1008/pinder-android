@@ -95,4 +95,11 @@
             android:text="Project Owner" />
     </LinearLayout>
 
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="275dp"/>
+
 </LinearLayout>

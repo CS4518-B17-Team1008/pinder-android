@@ -11,16 +11,83 @@
         android:layout_height="0dp"
         android:layout_weight="1" >
 
-        <ImageView
-            android:id="@+id/photo"
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="25dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@android:color/darker_gray"
-            android:cropToPadding="true"
-            android:scaleType="centerInside" />
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="25dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:scaleType="fitXY"
+                android:background="@android:color/darker_gray"
+                android:cropToPadding="true" />
+
+            <ImageView
+                android:id="@+id/background_slate"
+                android:layout_width="50dp"
+                android:layout_height="100dp"
+                android:layout_alignBottom="@+id/photo"
+                android:layout_alignEnd="@+id/photo"
+                android:layout_alignLeft="@+id/photo"
+                android:layout_alignRight="@+id/photo"
+                android:layout_alignStart="@+id/photo"
+                app:srcCompat="@color/colorAccent1" />
+
+            <TextView
+                android:id="@+id/projectTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/photo"
+                android:layout_alignLeft="@+id/photo"
+                android:layout_alignRight="@+id/photo"
+                android:layout_alignStart="@+id/photo"
+                android:layout_alignTop="@+id/background_slate"
+                android:fontFamily="sans-serif-condensed"
+                android:paddingLeft="8dp"
+                android:text="Project Title"
+                android:textColor="@color/common_google_signin_btn_text_light_pressed"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/projectShortDescript"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/projectLocation"
+                android:layout_alignEnd="@+id/photo"
+                android:layout_alignLeft="@+id/photo"
+                android:layout_alignRight="@+id/photo"
+                android:layout_alignStart="@+id/photo"
+                android:layout_below="@+id/projectTitle"
+                android:fontFamily="sans-serif-condensed"
+                android:paddingLeft="8dp"
+                android:text="Project Short Description"
+                android:textColor="@color/common_google_signin_btn_text_light_pressed"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/projectLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/photo"
+                android:layout_alignEnd="@+id/photo"
+                android:layout_alignLeft="@+id/photo"
+                android:layout_alignRight="@+id/photo"
+                android:layout_alignStart="@+id/photo"
+                android:fontFamily="sans-serif-condensed"
+                android:paddingLeft="8dp"
+                android:text="Project Location"
+                android:textColor="@color/common_google_signin_btn_text_light_pressed"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
     </ImageSwitcher>
 
     <LinearLayout
