@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <!-- <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_camera"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Import" />
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Gallery" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Slideshow" />
+        <item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Manage Projects" />
+    </group> -->
+
+    <item android:title="Collaborator">
+        <menu>
+            <item
+                android:id="@+id/nav_find_project"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Find Projects" />
+            <item
+                android:id="@+id/nav_view_matched_projects"
+                android:icon="@drawable/ic_menu_send"
+                android:title="View Matched Projects" />
+        </menu>
+    </item>
+    <item android:title="Manager">
+        <menu>
+            <item
+                android:id="@+id/nav_manage_projects"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Manage Projects" />
+        </menu>
+    </item>
+
+</menu>
