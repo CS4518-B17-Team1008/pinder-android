@@ -7,6 +7,6 @@ import org.json.JSONObject;
  */
 
 public interface RequestHandler {
-    public boolean send(JSONObject obj);
+    public void send(JSONObject obj);
     public JSONObject recieve();
 }
