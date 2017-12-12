@@ -1,8 +1,10 @@
 package team1008.b17.cs4518.wpi.pinderapp;
 
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -68,7 +70,12 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Fragment fragment = new SettingsFragment();
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
         }
 
         return super.onOptionsItemSelected(item);
@@ -87,6 +94,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_view_matched_projects) {
 
         } else if (id == R.id.nav_manage_projects) {
+
 
         }
 
