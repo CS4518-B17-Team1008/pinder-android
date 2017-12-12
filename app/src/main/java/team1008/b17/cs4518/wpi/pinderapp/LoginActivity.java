@@ -103,6 +103,8 @@ public class LoginActivity extends AppCompatActivity {
             showProgress(false);
             Log.w(TAG, "Logged in");
             mGoogleSignInButton.setEnabled(false);
+            Intent signInToMain = new Intent(this, MainActivity.class);
+            startActivity(signInToMain);
         }
     }
 
