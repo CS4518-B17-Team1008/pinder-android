@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="75dp"
                 android:layout_marginStart="75dp"
-                android:background="?android:attr/tooltipBackgroundColor"
+                android:background="@color/darkGray"
                 android:text="Deny"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
@@ -92,10 +92,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"
                 android:layout_marginStart="18dp"
-                android:background="?android:attr/tooltipBackgroundColor"
+                android:background="@color/darkGray"
                 android:text="Accept"
                 android:textColor="@android:color/white"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
         </LinearLayout>
 
@@ -107,7 +107,7 @@
             android:layout_marginRight="15dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:background="?android:attr/tooltipBackgroundColor"
+            android:background="@color/darkGray"
             app:srcCompat="@drawable/ic_back_arrow" />
 
     </LinearLayout>
