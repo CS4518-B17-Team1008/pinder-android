@@ -17,8 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        tools:hint="Name" />
+        android:hint="Name"
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/editEmail"
@@ -71,8 +71,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="18dp"
-        android:paddingLeft="8dp" >
+        android:paddingBottom="10dp"
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp">
 
         <TextView
             android:id="@+id/accType"
@@ -81,14 +82,13 @@
             android:text="Account Type"
             android:textSize="18sp" />
 
-        <RadioButton
+        <CheckBox
             android:id="@+id/pSeeker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="true"
             android:text="Project Seeker" />
 
-        <RadioButton
+        <CheckBox
             android:id="@+id/pOwner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -102,5 +102,29 @@
         android:layout_gravity="bottom"
         android:layout_marginLeft="275dp"
         android:text="Get Location" />
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="275dp"
+        android:layout_marginStart="275dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/darkGray"
+        android:fontFamily="sans-serif-condensed"
+        android:text="Apply"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="275dp"
+        android:layout_marginStart="275dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/darkGray"
+        android:fontFamily="sans-serif-condensed"
+        android:text="Return"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
 </LinearLayout>
