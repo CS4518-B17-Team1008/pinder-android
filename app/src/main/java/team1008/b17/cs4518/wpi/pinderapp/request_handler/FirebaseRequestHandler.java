@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 
-
 /**
  * Created by calper on 12/12/17.
  */
@@ -23,41 +22,33 @@ import org.apache.commons.io.IOUtils;
 public class FirebaseRequestHandler implements RequestHandler {
     private URL url;
     private HttpURLConnection urlConnection;
+    String address;
 
-    FirebaseRequestHandler(String address) {
-        try {
-            url = new URL(address);
-            urlConnection = (HttpURLConnection) url.openConnection();
-        } catch (Exception e) {
-
-        } finally {
-            urlConnection.disconnect();
-        }
+    public FirebaseRequestHandler(String address) {
+        this.address = address;
     }
 
 
     @Override
-    public boolean send(JSONObject obj) {
+    public JSONObject send(JSONObject obj, String path) {
         String str = obj.toString();
         try {
+            url = new URL(address+"/"+path);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setDoOutput(true);
+            urlConnection.setConnectTimeout(5000);
+            urlConnection.setReadTimeout(5000);
+            urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.getOutputStream().write(str.getBytes());
             urlConnection.getOutputStream().flush();
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public JSONObject recieve() {
-        try {
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             String result = IOUtils.toString(in, "UTF-8");
-            JSONObject obj = new JSONObject(result);
-            return  obj;
+            JSONObject res = new JSONObject(result);
+            urlConnection.disconnect();
+            return  res;
         } catch (Exception e) {
             return null;
         }
-
     }
+
 }
