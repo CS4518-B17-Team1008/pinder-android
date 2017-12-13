@@ -98,13 +98,17 @@ public class LoginActivity extends AppCompatActivity {
 
     // Checks if user is logged in, if yes then start main activity (and remove this activity from stack)
     private void updateUI(GoogleSignInAccount account) {
+        showProgress(false);
         if (account != null) {
-            showProgress(false);
             Log.w(TAG, "Logged in");
             mGoogleSignInButton.setEnabled(false);
             Intent signInToMain = new Intent(this, MainActivity.class);
             startActivity(signInToMain);
         }
+        else {
+            mGoogleSignInButton.setEnabled(true);
+        }
+
     }
 
     /**
