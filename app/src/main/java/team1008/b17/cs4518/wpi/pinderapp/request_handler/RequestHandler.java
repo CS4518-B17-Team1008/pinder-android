@@ -7,5 +7,5 @@ import org.json.JSONObject;
  */
 
 public interface RequestHandler {
-    public JSONObject send(JSONObject obj, String path);
+    public JSONObject send(JSONObject obj, String path) throws Exception;
 }
