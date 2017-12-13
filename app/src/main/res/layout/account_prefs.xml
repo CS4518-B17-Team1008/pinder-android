@@ -96,18 +96,28 @@
     </LinearLayout>
 
     <Button
+<<<<<<< HEAD
         android:id="@+id/applySettings"
+=======
+        android:id="@+id/requestLocation"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="275dp"
+        android:text="Get Location" />
+    <Button
+>>>>>>> 05ae77f3460f06f4532e0341b58aaaa170d951b2
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginLeft="275dp"
         android:layout_marginStart="275dp"
+        android:layout_marginTop="8dp"
         android:background="@color/darkGray"
         android:fontFamily="sans-serif-condensed"
         android:text="Apply"
         android:textColor="@android:color/white"
         android:textSize="18sp" />
-
     <Button
         android:id="@+id/returnToMain"
         android:layout_width="100dp"
