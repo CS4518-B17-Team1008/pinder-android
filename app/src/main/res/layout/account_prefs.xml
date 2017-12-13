@@ -96,10 +96,11 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/requestLocation"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:text="Button"
         android:layout_gravity="bottom"
-        android:layout_marginLeft="275dp"/>
+        android:layout_marginLeft="275dp"
+        android:text="Get Location" />
 
 </LinearLayout>
