@@ -71,9 +71,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="10dp"
-        android:paddingLeft="8dp"
-        android:paddingStart="8dp">
+        android:paddingBottom="18dp"
+        android:paddingLeft="8dp" >
 
         <TextView
             android:id="@+id/accType"
@@ -98,26 +97,8 @@
     <Button
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginLeft="275dp"
-        android:layout_marginStart="275dp"
-        android:background="@color/darkGray"
-        android:fontFamily="sans-serif-condensed"
         android:text="Apply"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
-
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginLeft="275dp"
-        android:layout_marginStart="275dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/darkGray"
-        android:fontFamily="sans-serif-condensed"
-        android:text="Return"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:layout_marginLeft="275dp"/>
 
 </LinearLayout>
