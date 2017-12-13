@@ -17,6 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.json.JSONObject;
+
 import team1008.b17.cs4518.wpi.pinderapp.request_handler.FirebaseRequestHandler;
 import team1008.b17.cs4518.wpi.pinderapp.request_handler.RequestHandler;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -58,7 +60,28 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        RequestHandler rh = new FirebaseRequestHandler("https://pinder-d3098.firebaseio.com/");
+
+        Runnable runnable1 = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("--TEST--");
+                RequestHandler rh = new FirebaseRequestHandler("https://us-central1-pinder-d3098.cloudfunctions.net/app/");
+                try {
+                    JSONObject jo = new JSONObject();
+                    jo = jo.put("Hello", "World");
+                    JSONObject ret = rh.send(jo, "echo");
+                    System.out.println(ret.get("Hello"));
+                } catch (Exception e){
+                    System.out.println("----ERROR----");
+                    System.out.println(e);
+                }
+            }
+        };
+        Thread thread1 = new Thread(runnable1);
+        thread1.start();
+        //thread1.setDaemon(true);
+
+
     }
 
     @Override
