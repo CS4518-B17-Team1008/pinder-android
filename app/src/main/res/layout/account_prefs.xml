@@ -36,13 +36,32 @@
         android:hint="###-###-####"
         android:inputType="phone" />
 
-    <EditText
-        android:id="@+id/editLocation"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="City, State"
-        android:inputType="textPersonName" />
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/editLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="City, State"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/requestLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:layout_weight="1"
+            android:background="@color/darkGray"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Get Location"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -93,20 +112,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Project Owner" />
+
     </LinearLayout>
 
     <Button
-<<<<<<< HEAD
         android:id="@+id/applySettings"
-=======
-        android:id="@+id/requestLocation"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginLeft="275dp"
-        android:text="Get Location" />
-    <Button
->>>>>>> 05ae77f3460f06f4532e0341b58aaaa170d951b2
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -118,6 +128,7 @@
         android:text="Apply"
         android:textColor="@android:color/white"
         android:textSize="18sp" />
+
     <Button
         android:id="@+id/returnToMain"
         android:layout_width="100dp"
@@ -126,6 +137,7 @@
         android:layout_marginLeft="275dp"
         android:layout_marginStart="275dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@color/darkGray"
         android:fontFamily="sans-serif-condensed"
         android:text="Return"
