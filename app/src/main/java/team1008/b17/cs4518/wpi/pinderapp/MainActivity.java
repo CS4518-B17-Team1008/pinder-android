@@ -13,6 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import team1008.b17.cs4518.wpi.pinderapp.request_handler.FirebaseRequestHandler;
+import team1008.b17.cs4518.wpi.pinderapp.request_handler.RequestHandler;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        RequestHandler rh = new FirebaseRequestHandler("https://pinder-d3098.firebaseio.com/");
     }
 
     @Override
