@@ -17,8 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        tools:hint="Name" />
+        android:hint="Name"
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/editEmail"
@@ -81,14 +81,13 @@
             android:text="Account Type"
             android:textSize="18sp" />
 
-        <RadioButton
+        <CheckBox
             android:id="@+id/pSeeker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="true"
             android:text="Project Seeker" />
 
-        <RadioButton
+        <CheckBox
             android:id="@+id/pOwner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -98,7 +97,7 @@
     <Button
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="Apply"
         android:layout_gravity="bottom"
         android:layout_marginLeft="275dp"/>
 

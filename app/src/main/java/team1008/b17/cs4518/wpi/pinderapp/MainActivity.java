@@ -1,8 +1,12 @@
 package team1008.b17.cs4518.wpi.pinderapp;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,13 +21,24 @@ import org.json.JSONObject;
 
 import team1008.b17.cs4518.wpi.pinderapp.request_handler.FirebaseRequestHandler;
 import team1008.b17.cs4518.wpi.pinderapp.request_handler.RequestHandler;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    GoogleSignInClient mGoogleSignInClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestEmail()
+        .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -70,6 +85,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account == null) {
+            Intent signInScreen = new Intent(this, LoginActivity.class);
+            startActivity(signInScreen);
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -95,7 +122,23 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Fragment fragment = new SettingsFragment();
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
+        }
+        if (id == R.id.action_signout) {
+            mGoogleSignInClient.signOut()
+                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Intent signInScreen = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(signInScreen);
+                        }
+                    });
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -114,6 +157,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_view_matched_projects) {
 
         } else if (id == R.id.nav_manage_projects) {
+
 
         }
 
