@@ -209,6 +209,12 @@ public class MainActivity extends AppCompatActivity
                     .replace(R.id.fragment_container, fragment)
                     .commit();
         } else if (id == R.id.nav_view_matched_projects) {
+            Fragment fragment = new MatchedProjectFragment();
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
 
         } else if (id == R.id.nav_manage_projects) {
 
