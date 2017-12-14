@@ -21,14 +21,6 @@
         android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/editEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="person@gmail.com"
-        android:inputType="textEmailAddress" />
-
-    <EditText
         android:id="@+id/editPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,13 +28,32 @@
         android:hint="###-###-####"
         android:inputType="phone" />
 
-    <EditText
-        android:id="@+id/editLocation"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="City, State"
-        android:inputType="textPersonName" />
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/editLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="City, State"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/requestLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:layout_weight="1"
+            android:background="@color/darkGray"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Get Location"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -52,17 +63,42 @@
         android:paddingBottom="18dp"
         android:paddingLeft="8dp" >
 
-        <TextView
-            android:id="@+id/searchDistance"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Search Distance:"
-            android:textSize="18sp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/searchDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Search Distance:"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/dist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:layout_marginRight="3dp"
+                android:layout_marginEnd="3dp"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="km"
+                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
+                android:textSize="18sp" />
+        </LinearLayout>
 
         <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:max="100"
             android:paddingTop="14dp" />
 
     </LinearLayout>
@@ -71,8 +107,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="18dp"
-        android:paddingLeft="8dp" >
+        android:paddingBottom="10dp"
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp">
 
         <TextView
             android:id="@+id/accType"
@@ -92,13 +129,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Project Owner" />
+
     </LinearLayout>
 
     <Button
+        android:id="@+id/apply"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:text="Apply"
         android:layout_gravity="bottom"
-        android:layout_marginLeft="275dp"/>
+        android:layout_marginLeft="275dp"
+        android:layout_marginStart="275dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/darkGray"
+        android:fontFamily="sans-serif-condensed"
+        android:text="Apply"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
 </LinearLayout>
