@@ -143,7 +143,7 @@ public class MatcherInfoFragment extends Fragment {
         database.getReference("users/" + acct.getId() + "/potentialmatch").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot.getKey() == projectId) {
+                if (dataSnapshot.child("projectId").getValue(String.class) == projectId) {
                     mAccept.setText("Accepted");
                     mAccept.setEnabled(false);
                     mDeny.setVisibility(View.INVISIBLE);
@@ -173,7 +173,7 @@ public class MatcherInfoFragment extends Fragment {
         database.getReference("users/" + acct.getId() + "/potentialmatch").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot.getKey() == projectId) {
+                if (dataSnapshot.child("projectId").getValue(String.class) == projectId) {
                     mAccept.setText("Accepted");
                     mAccept.setEnabled(false);
                     mDeny.setVisibility(View.INVISIBLE);
