@@ -35,18 +35,20 @@ import team1008.b17.cs4518.wpi.pinderapp.request_handler.RequestHandler;
  * Created by selph on 12/14/17.
  */
 
-public class MatcherInfoFragment extends Fragment {
+public class SeekerInfoFragment extends Fragment {
+    private String userId;
     private String projectId;
     Button mAccept;
     Button mDeny;
 
-    public MatcherInfoFragment() {
+    public SeekerInfoFragment() {
 
     }
 
-    public static MatcherInfoFragment newInstance(String projectId) {
-        MatcherInfoFragment fragment = new MatcherInfoFragment();
+    public static SeekerInfoFragment newInstance(String userId, String projectId) {
+        SeekerInfoFragment fragment = new SeekerInfoFragment();
         Bundle args = new Bundle();
+        args.putString("userId", userId);
         args.putString("projectId", projectId);
         fragment.setArguments(args);
         return fragment;
@@ -56,6 +58,7 @@ public class MatcherInfoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            userId = getArguments().getString("userId");
             projectId = getArguments().getString("projectId");
         }
     }
@@ -68,27 +71,14 @@ public class MatcherInfoFragment extends Fragment {
         if (acct != null) {
 
         }
-        View v = inflater.inflate(R.layout.matcher_info, container, false);
-        final TextView location = v.findViewById(R.id.location);
+        View v = inflater.inflate(R.layout.seeker_info, container, false);
+        final TextView name = v.findViewById(R.id.seekerName);
         final TextView description = v.findViewById(R.id.description);
-        database.getReference("projects/" + projectId).addValueEventListener(new ValueEventListener() {
+        database.getReference("users/" + userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 description.setText(dataSnapshot.child("description").getValue(String.class));
-                double latitude = dataSnapshot.child("latitude").getValue(Double.class);
-                double longitude = dataSnapshot.child("longitude").getValue(Double.class);
-                Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
-                try {
-                    List<Address> addresses = gcd.getFromLocation(latitude, longitude, 1);
-                    if (!addresses.isEmpty()) {
-                        // City, State, Country
-                        location.setText(addresses.get(0).getLocality() +
-                                ", " + addresses.get(0).getAdminArea() +
-                                ", " + addresses.get(0).getCountryName());
-                    }
-                } catch (IOException e) {
-                    Snackbar.make(getView(), "WARNING: Cannot retrieve city name from project latitude and longitude", 2).show();
-                }
+                name.setText(dataSnapshot.child("name").getValue(String.class));
             }
 
             @Override
@@ -108,7 +98,7 @@ public class MatcherInfoFragment extends Fragment {
                         try {
                             JSONObject jo = new JSONObject();
                             jo = jo.put("Hello", "World");
-                            JSONObject ret = rh.send(jo, "users/" + acct.getId() + "/match/" + projectId);
+                            JSONObject ret = rh.send(jo, "projects/" + projectId + "/match/" + userId);
                         } catch (Exception e){
                             System.out.println("----ERROR----");
                             System.out.println(e);
@@ -129,7 +119,7 @@ public class MatcherInfoFragment extends Fragment {
                         try {
                             JSONObject jo = new JSONObject();
                             jo = jo.put("Hello", "World");
-                            JSONObject ret = rh.send(jo, "users/" + acct.getId() + "/unmatch/" + projectId);
+                            JSONObject ret = rh.send(jo, "projects/" + projectId + "/unmatch/" + userId);
                         } catch (Exception e){
                             System.out.println("----ERROR----");
                             System.out.println(e);
@@ -140,10 +130,10 @@ public class MatcherInfoFragment extends Fragment {
                 thread1.start();
             }
         });
-        database.getReference("users/" + acct.getId() + "/potentialmatch").addChildEventListener(new ChildEventListener() {
+        database.getReference("projects/" + projectId + "/match").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot.child("projectId").getValue(String.class) == projectId) {
+                if (dataSnapshot.child("userId").getValue(String.class) == projectId) {
                     mAccept.setText("Accepted");
                     mAccept.setEnabled(false);
                     mDeny.setVisibility(View.INVISIBLE);
@@ -157,41 +147,11 @@ public class MatcherInfoFragment extends Fragment {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        database.getReference("users/" + acct.getId() + "/potentialmatch").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot.child("projectId").getValue(String.class) == projectId) {
-                    mAccept.setText("Accepted");
-                    mAccept.setEnabled(false);
-                    mDeny.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child("projectId").getValue(String.class) == projectId) {
+                /*if (dataSnapshot.getKey() == projectId) {
                     mAccept.setVisibility(View.INVISIBLE);
                     mDeny.setText("Unmatched");
                     mDeny.setEnabled(false);
-                }
+                }*/
             }
 
             @Override
@@ -205,10 +165,10 @@ public class MatcherInfoFragment extends Fragment {
             }
         });
 
-        database.getReference("users/" + acct.getId() + "/unmatch").addChildEventListener(new ChildEventListener() {
+        database.getReference("projects/" + projectId + "/unmatch").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot.child("projectId").getValue(String.class) == projectId) {
+                if (dataSnapshot.child("userId").getValue(String.class) == userId) {
                     mAccept.setVisibility(View.INVISIBLE);
                     mDeny.setText("Denied");
                     mDeny.setEnabled(false);
