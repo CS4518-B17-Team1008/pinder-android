@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:\Users\Marissa\Documents\AndroidProject\pinder-android\PinderApp.iml" filepath="C:\Users\Marissa\Documents\AndroidProject\pinder-android\PinderApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PinderApp.iml" filepath="$PROJECT_DIR$/PinderApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/pinder-android.iml" filepath="$PROJECT_DIR$/pinder-android.iml" />
     </modules>
   </component>
 </project>
