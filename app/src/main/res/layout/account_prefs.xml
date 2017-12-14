@@ -21,14 +21,6 @@
         android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/editEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="person@gmail.com"
-        android:inputType="textEmailAddress" />
-
-    <EditText
         android:id="@+id/editPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -116,7 +108,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/applySettings"
+        android:id="@+id/apply"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

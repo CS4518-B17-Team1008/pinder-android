@@ -2,21 +2,38 @@ package team1008.b17.cs4518.wpi.pinderapp;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,27 +44,27 @@ import com.google.android.gms.tasks.OnSuccessListener;
 public class SettingsFragment extends Fragment {
 
     EditText mEditName;
-    EditText mEditEmail;
     EditText mEditPhone;
+    EditText mEditLocation;
     Button mRequestLocation;
+    CheckBox mSeeker;
+    CheckBox mOwner;
+    Button mApply;
+    // this variable controls whether we should trigger the location editor's listener
+    boolean mShouldTrigger = true;
     // location services
     // private FusedLocationProviderClient mFusedLocationClient;
+    private Geocoder gcd;
     private static final int REQUEST_LOCATION = 1;
 
+    private double latitude = 0;
+    private double longitude = 0;
     public SettingsFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SettingsFragment.
-     */
     // TODO: Rename and change types and number of parameters
-    public static SettingsFragment newInstance(String param1, String param2) {
+    public static SettingsFragment newInstance(GoogleSignInAccount account) {
         SettingsFragment fragment = new SettingsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -59,6 +76,7 @@ public class SettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        gcd = new Geocoder(getContext(), Locale.getDefault());
     }
 
     @Override
@@ -66,13 +84,41 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.account_prefs, container, false);
         mEditName = v.findViewById(R.id.editName);
-        mEditEmail = v.findViewById(R.id.editEmail);
         mEditPhone = v.findViewById(R.id.editPhone);
+        mEditLocation = v.findViewById(R.id.editLocation);
+        mEditLocation.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (mShouldTrigger) {
+                    getLocation();
+                }
+            }
+        });
         mRequestLocation = v.findViewById(R.id.requestLocation);
         mRequestLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getLocation();
+                mEditLocation.setText("");
+                // getLocation();
+            }
+        });
+        mSeeker = v.findViewById(R.id.pSeeker);
+        mOwner = v.findViewById(R.id.pOwner);
+        mApply = v.findViewById(R.id.apply);
+        mApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                apply();
             }
         });
         return v;
@@ -88,11 +134,13 @@ public class SettingsFragment extends Fragment {
                 getLocation();
             } else {
                 // Permission was denied or request was cancelled
+                Snackbar.make(getView(), "ERROR: Cannot get location permission", 2).show();
             }
         }
 
     }
 
+    // get current location
     public void getLocation() {
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -102,19 +150,70 @@ public class SettingsFragment extends Fragment {
                     REQUEST_LOCATION);
         }
         else { // Permission granted
-            LocationServices.getFusedLocationProviderClient(getActivity())
-                    .getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location != null) {
-                                System.out.println("LAT:" + location.getLatitude());
-                                System.out.println("LONG:" + location.getLongitude());
+            mShouldTrigger = false;
+            if (mEditLocation.getText().length() == 0) { // get current location
+                Task locationTask = LocationServices.getFusedLocationProviderClient(getActivity())
+                        .getLastLocation();
+                locationTask.addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                            try {
+                                List<Address> addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                                if (!addresses.isEmpty()) {
+                                    // City, State, Country
+                                    mEditLocation.setText(addresses.get(0).getLocality() +
+                                    ", " + addresses.get(0).getAdminArea() +
+                                    ", " + addresses.get(0).getCountryName());
+                                }
+                            } catch (IOException e) {
+                                Snackbar.make(getView(), "WARNING: Cannot retrieve city name from current location", 2).show();
+                                mEditLocation.setText("");
                             }
+
                         }
-                    });
+                        mShouldTrigger = true;
+                    }
+                });
 
+                locationTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Snackbar.make(getView(), "ERROR: Cannot get your current location", 2).show();
+                        mShouldTrigger = true;
+                    }
+                });
+            }
+            else { // get location entered
+                try {
+                    List<Address> addresses = gcd.getFromLocationName(mEditLocation.getText().toString(), 1);
+                    if (!addresses.isEmpty()) {
+                        latitude = addresses.get(0).getLatitude();
+                        longitude = addresses.get(0).getLongitude();
+                    }
+                } catch (IOException e) {
+                    Snackbar.make(getView(), "ERROR: Cannot retrieve location from inputted text", 2).show();
+                    mEditLocation.setText("");
+                }
+                mShouldTrigger = true;
+            }
         }
+    }
 
+    // save and submit data
+    public void apply() {
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        if (acct != null) {
+            DatabaseReference myRef = database.getReference("users").child(acct.getId());
+            myRef.child("name").setValue(mEditName.getText().toString());
+            myRef.child("phone").setValue(mEditPhone.getText().toString());
+            myRef.child("is_seeker").setValue(mSeeker.isChecked());
+            myRef.child("is_owner").setValue(mOwner.isChecked());
+            myRef.child("latitude").setValue(latitude);
+            myRef.child("longitude").setValue(longitude);
+        }
     }
 }
