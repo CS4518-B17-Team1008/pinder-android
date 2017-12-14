@@ -99,14 +99,26 @@
             android:id="@+id/deny"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:layout_weight="1"
-            android:text="Deny" />
+            android:background="@color/darkGray"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Deny"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/accept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:text="Accept" />
+            android:background="@color/darkGray"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Accept"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
     </LinearLayout>
 </LinearLayout>

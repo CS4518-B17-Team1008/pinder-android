@@ -19,7 +19,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 /**
  * A login screen that offers login via email/password.
@@ -33,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     private View mProgressView;
     private View mLoginFormView;
     private SignInButton mGoogleSignInButton;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     // Google Login services
     private GoogleSignInClient mGoogleSignInClient;
@@ -48,8 +54,9 @@ public class LoginActivity extends AppCompatActivity {
 
         // Google sync in setup
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestEmail()
-        .build();
+                .requestIdToken(getString(R.string.server_client_id))
+                .requestEmail()
+                .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         mGoogleSignInButton = findViewById(R.id.google_sign_in_button);
         mGoogleSignInButton.setOnClickListener(new OnClickListener() {
@@ -82,10 +89,25 @@ public class LoginActivity extends AppCompatActivity {
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
+                final GoogleSignInAccount account = task.getResult(ApiException.class);
+                // Got the signed in account, now authenticate Firebase as well
+                AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+                mAuth.signInWithCredential(credential)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d(TAG, "signInWithCredential:success");
+                                    updateUI(account);
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w(TAG, "signInWithCredential:failure", task.getException());
+                                    updateUI(null);
+                                }
 
-                // Signed in successfully, show authenticated UI.
-                updateUI(account);
+                            }
+                        });
             } catch (ApiException e) {
                 // The ApiException status code indicates the detailed failure reason.
                 // Please refer to the GoogleSignInStatusCodes class reference for more information.
