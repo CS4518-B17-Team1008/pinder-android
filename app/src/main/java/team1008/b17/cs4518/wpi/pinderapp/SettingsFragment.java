@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,12 +30,23 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
+import team1008.b17.cs4518.wpi.pinderapp.request_handler.FirebaseRequestHandler;
+import team1008.b17.cs4518.wpi.pinderapp.request_handler.RequestHandler;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,6 +64,7 @@ public class SettingsFragment extends Fragment {
     CheckBox mOwner;
     Button mApply;
     SeekBar mDistance;
+    TextView tdist;
     // this variable controls whether we should trigger the location editor's listener
     boolean mShouldTrigger = true;
     // location services
@@ -85,6 +98,10 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.account_prefs, container, false);
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference myRef = database.getReference("users").child(acct.getId());
+
         mEditName = v.findViewById(R.id.editName);
         mEditPhone = v.findViewById(R.id.editPhone);
         mEditLocation = v.findViewById(R.id.editLocation);
@@ -124,6 +141,45 @@ public class SettingsFragment extends Fragment {
             }
         });
         mDistance = v.findViewById(R.id.seekBar);
+        tdist = v.findViewById(R.id.dist);
+
+        // Fills in previous values submitted by user
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserInformation userInfo = dataSnapshot.getValue(UserInformation.class);
+                if(userInfo.getName() != null) {
+                    mEditName.setText(userInfo.getName());
+                    mEditPhone.setText(userInfo.getPhone());
+                    tdist.setText(Integer.toString(userInfo.getSearch_distance()));
+                    mDistance.setProgress(userInfo.getSearch_distance());
+                    mSeeker.setChecked(userInfo.isIs_seeker());
+                    mOwner.setChecked(userInfo.isIs_owner());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
+        // Updates seekbar
+        mDistance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tdist.setText(Integer.toString(progress));
+            }
+        });
+
         return v;
     }
 
