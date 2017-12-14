@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -50,6 +51,7 @@ public class SettingsFragment extends Fragment {
     CheckBox mSeeker;
     CheckBox mOwner;
     Button mApply;
+    SeekBar mDistance;
     // this variable controls whether we should trigger the location editor's listener
     boolean mShouldTrigger = true;
     // location services
@@ -121,6 +123,7 @@ public class SettingsFragment extends Fragment {
                 apply();
             }
         });
+        mDistance = v.findViewById(R.id.seekBar);
         return v;
     }
 
@@ -214,6 +217,7 @@ public class SettingsFragment extends Fragment {
             myRef.child("is_owner").setValue(mOwner.isChecked());
             myRef.child("latitude").setValue(latitude);
             myRef.child("longitude").setValue(longitude);
+            myRef.child("search_distance").setValue(mDistance.getProgress());
         }
     }
 }
