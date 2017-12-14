@@ -1,5 +1,7 @@
 package team1008.b17.cs4518.wpi.pinderapp;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -27,11 +30,22 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     GoogleSignInClient mGoogleSignInClient;
+
+    private static final String NOTIFICATION_CHANNEL = "channel01";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +75,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Runnable runnable1 = new Runnable() {
+        /*Runnable runnable1 = new Runnable() {
             @Override
             public void run() {
                 System.out.println("--TEST--");
@@ -78,9 +92,8 @@ public class MainActivity extends AppCompatActivity
             }
         };
         Thread thread1 = new Thread(runnable1);
-        thread1.start();
+        thread1.start();*/
         //thread1.setDaemon(true);
-
 
     }
 
@@ -94,6 +107,42 @@ public class MainActivity extends AppCompatActivity
             Intent signInScreen = new Intent(this, LoginActivity.class);
             startActivity(signInScreen);
         }
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database.getReference("users/" + account.getId() + "/match")
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        // create system notification to tell the user they have been matched
+                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), NOTIFICATION_CHANNEL)
+                                .setSmallIcon(R.drawable.fireicon)
+                                .setContentTitle("Project Matched!")
+                                .setContentText("You have been matched with a project!");
+                        NotificationManager mNotificationManager =
+                                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        // uses current time as notification ID
+                        mNotificationManager.notify(Integer.parseInt(new SimpleDateFormat("ddHHmmss",  Locale.US).format(new Date())), mBuilder.build());
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     @Override
@@ -160,7 +209,12 @@ public class MainActivity extends AppCompatActivity
         //TODO: Launch the fragment associated with the screen
 
         if (id == R.id.nav_find_project) {
-
+            Fragment fragment = new ProjectPagerFragment();
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
         } else if (id == R.id.nav_view_matched_projects) {
 
         } else if (id == R.id.nav_manage_projects) {

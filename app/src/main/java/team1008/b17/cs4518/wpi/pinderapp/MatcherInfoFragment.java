@@ -1,0 +1,144 @@
+package team1008.b17.cs4518.wpi.pinderapp;
+
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Matcher;
+
+import team1008.b17.cs4518.wpi.pinderapp.request_handler.FirebaseRequestHandler;
+import team1008.b17.cs4518.wpi.pinderapp.request_handler.RequestHandler;
+
+/**
+ * Created by selph on 12/14/17.
+ */
+
+public class MatcherInfoFragment extends Fragment {
+    private String projectId;
+    Button mAccept;
+    Button mDeny;
+
+    public MatcherInfoFragment() {
+
+    }
+
+    public static MatcherInfoFragment newInstance(String projectId) {
+        MatcherInfoFragment fragment = new MatcherInfoFragment();
+        Bundle args = new Bundle();
+        args.putString("projectId", projectId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            projectId = getArguments().getString("projectId");
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        final GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        if (acct != null) {
+
+        }
+        View v = inflater.inflate(R.layout.matcher_info, container, false);
+        final TextView location = v.findViewById(R.id.location);
+        final TextView description = v.findViewById(R.id.description);
+        database.getReference("projects/" + projectId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                description.setText(dataSnapshot.child("description").getValue(String.class));
+                double latitude = dataSnapshot.child("latitude").getValue(Double.class);
+                double longitude = dataSnapshot.child("longitude").getValue(Double.class);
+                Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
+                try {
+                    List<Address> addresses = gcd.getFromLocation(latitude, longitude, 1);
+                    if (!addresses.isEmpty()) {
+                        // City, State, Country
+                        location.setText(addresses.get(0).getLocality() +
+                                ", " + addresses.get(0).getAdminArea() +
+                                ", " + addresses.get(0).getCountryName());
+                    }
+                } catch (IOException e) {
+                    Snackbar.make(getView(), "WARNING: Cannot retrieve city name from project latitude and longitude", 2).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        mAccept = v.findViewById(R.id.accept);
+        mDeny = v.findViewById(R.id.deny);
+        mAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Runnable runnable1 = new Runnable() {
+                    @Override
+                    public void run() {
+                        RequestHandler rh = new FirebaseRequestHandler("https://us-central1-pinder-d3098.cloudfunctions.net/app/");
+                        try {
+                            JSONObject jo = new JSONObject();
+                            jo = jo.put("Hello", "World");
+                            JSONObject ret = rh.send(jo, "users/" + acct.getId() + "/match/" + projectId);
+                        } catch (Exception e){
+                            System.out.println("----ERROR----");
+                            System.out.println(e);
+                        }
+                    }
+                };
+                Thread thread1 = new Thread(runnable1);
+                thread1.start();
+            }
+        });
+        mDeny.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Runnable runnable1 = new Runnable() {
+                    @Override
+                    public void run() {
+                        RequestHandler rh = new FirebaseRequestHandler("https://us-central1-pinder-d3098.cloudfunctions.net/app/");
+                        try {
+                            JSONObject jo = new JSONObject();
+                            jo = jo.put("Hello", "World");
+                            JSONObject ret = rh.send(jo, "users/" + acct.getId() + "/unmatch/" + projectId);
+                        } catch (Exception e){
+                            System.out.println("----ERROR----");
+                            System.out.println(e);
+                        }
+                    }
+                };
+                Thread thread1 = new Thread(runnable1);
+                thread1.start();
+            }
+        });
+        return v;
+    }
+}
