@@ -82,6 +82,7 @@
                 android:layout_marginLeft="75dp"
                 android:layout_marginStart="75dp"
                 android:background="@color/darkGray"
+                android:fontFamily="sans-serif-condensed"
                 android:text="Deny"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
@@ -93,6 +94,7 @@
                 android:layout_marginLeft="18dp"
                 android:layout_marginStart="18dp"
                 android:background="@color/darkGray"
+                android:fontFamily="sans-serif-condensed"
                 android:text="Accept"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
