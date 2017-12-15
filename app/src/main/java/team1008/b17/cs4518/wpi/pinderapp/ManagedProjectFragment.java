@@ -91,7 +91,7 @@ public class ManagedProjectFragment extends Fragment {
         public void bind(String projectId) {
             this.projectId = projectId;
             final FirebaseDatabase database = FirebaseDatabase.getInstance();
-            database.getReference("projects/" + projectId + "/project_title").addValueEventListener(new ValueEventListener() {
+            database.getReference("projects/" + projectId + "/project_name").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     mProjectTitle.setText(dataSnapshot.getValue(String.class));
