@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity
 //        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.setDrawerTitle(1,"Pinder");
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -202,7 +203,7 @@ public class MainActivity extends AppCompatActivity
         //TODO: Launch the fragment associated with the screen
 
         if (id == R.id.nav_find_project) {
-            Fragment fragment = new ProjectPagerFragment();
+            Fragment fragment = new MatcherInfoFragment();
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
