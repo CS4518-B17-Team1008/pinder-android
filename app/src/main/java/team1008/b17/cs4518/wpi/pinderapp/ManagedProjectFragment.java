@@ -142,9 +142,17 @@ public class ManagedProjectFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            Intent i = new Intent(getContext(), SeekerPagerActivity.class);
-            i.putExtra("projectId", projectId);
-            startActivity(i);
+            //Intent i = new Intent(getContext(), ProjectFragment.class);
+            //i.putExtra("projectId", projectId);
+            //startActivity(i);
+            ProjectFragment nextFrag= new ProjectFragment();
+            Bundle bd = new Bundle();
+            bd.putString("PROJECT_KEY", projectId);
+            nextFrag.setArguments(bd);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, nextFrag)
+                    .addToBackStack(null)
+                    .commit();
         }
     }
     private class ProjectAdapter extends RecyclerView.Adapter<ManagedProjectFragment.ProjectHolder> {

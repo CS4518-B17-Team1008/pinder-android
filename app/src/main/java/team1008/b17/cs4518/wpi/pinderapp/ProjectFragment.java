@@ -31,11 +31,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
@@ -68,7 +71,7 @@ public class ProjectFragment extends Fragment {
     String projectId;
 
     public ProjectFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
@@ -92,6 +95,36 @@ public class ProjectFragment extends Fragment {
         contact_info_box = v.findViewById(R.id.edit_contactInfo);
         members_box = v.findViewById(R.id.members);
         photo = v.findViewById(R.id.photo);
+
+        if(getArguments() != null) {
+            projectId = getArguments().getString("PROJECT_KEY");
+            GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            if (acct != null) {
+                DatabaseReference myRef;
+
+                myRef = database.getReference("projects").child(projectId);
+                System.out.println("OLD KEY: " + myRef.getKey());
+
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        name_box.setText(dataSnapshot.child("project_name").getValue().toString());
+                        status_box.setText(dataSnapshot.child("status").getValue().toString());
+                        description_box.setText(dataSnapshot.child("description").getValue().toString());
+                        contact_info_box.setText(dataSnapshot.child("contact_info").getValue().toString());
+                        members_box.setText(dataSnapshot.child("members").getValue().toString());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+        }
 
         v.findViewById(R.id.requestLocation2).setOnClickListener(new View.OnClickListener() {
             @Override
