@@ -263,7 +263,7 @@ public class SettingsFragment extends Fragment {
     public void apply(){
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        if (acct != null) {
+            if (acct != null) {
             DatabaseReference myRef = database.getReference("users").child(acct.getId());
             myRef.child("name").setValue(mEditName.getText().toString());
             myRef.child("phone").setValue(mEditPhone.getText().toString());
