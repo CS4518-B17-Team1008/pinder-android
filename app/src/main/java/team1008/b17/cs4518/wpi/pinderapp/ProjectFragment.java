@@ -116,7 +116,7 @@ public class ProjectFragment extends Fragment {
                 System.out.println("OLD KEY: " + myRef.getKey());
 
 
-                myRef.addValueEventListener(new ValueEventListener() {
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         name_box.setText(dataSnapshot.child("project_name").getValue().toString());
