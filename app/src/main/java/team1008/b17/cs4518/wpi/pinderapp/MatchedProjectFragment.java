@@ -1,6 +1,7 @@
 package team1008.b17.cs4518.wpi.pinderapp;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,14 +27,12 @@ import java.util.List;
  */
 public class MatchedProjectFragment extends Fragment {
 
-    RecyclerView mProjectsRecyclerView;
     List<String> projectList;
+    RecyclerView mProjectsRecyclerView;
     MatchedProjectFragment.ProjectAdapter mAdapter;
-
     public MatchedProjectFragment() {
         // Required empty public constructor
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,28 +67,32 @@ public class MatchedProjectFragment extends Fragment {
             }
         });
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.matched_projects, container, false);
         mProjectsRecyclerView = v.findViewById(R.id.matched_project_view);
         mProjectsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new ProjectAdapter();
+        mAdapter = new MatchedProjectFragment.ProjectAdapter();
         mProjectsRecyclerView.setAdapter(mAdapter);
         return v;
     }
 
-    private class ProjectHolder extends RecyclerView.ViewHolder  {
+    private class ProjectHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView mProjectTitle;
         TextView mProjectManager;
+        String projectId;
         public ProjectHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_match, parent, false));
+            itemView.setOnClickListener(this);
             mProjectTitle = itemView.findViewById(R.id.project_title);
             mProjectManager = itemView.findViewById(R.id.project_manager);
         }
 
         public void bind(String projectId) {
+            this.projectId = projectId;
             final FirebaseDatabase database = FirebaseDatabase.getInstance();
             database.getReference("projects/" + projectId + "/project_name").addValueEventListener(new ValueEventListener() {
                 @Override
@@ -126,16 +129,22 @@ public class MatchedProjectFragment extends Fragment {
             });
         }
 
-    }
-    private class ProjectAdapter extends RecyclerView.Adapter<ProjectHolder> {
         @Override
-        public ProjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public void onClick(View v) {
+            Intent i = new Intent(getContext(), SeekerPagerActivity.class);
+            i.putExtra("projectId", projectId);
+            startActivity(i);
+        }
+    }
+    private class ProjectAdapter extends RecyclerView.Adapter<MatchedProjectFragment.ProjectHolder> {
+        @Override
+        public MatchedProjectFragment.ProjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            return new ProjectHolder(layoutInflater, parent);
+            return new MatchedProjectFragment.ProjectHolder(layoutInflater, parent);
         }
 
         @Override
-        public void onBindViewHolder(ProjectHolder holder, int position) {
+        public void onBindViewHolder(MatchedProjectFragment.ProjectHolder holder, int position) {
             holder.bind(projectList.get(position));
         }
 
