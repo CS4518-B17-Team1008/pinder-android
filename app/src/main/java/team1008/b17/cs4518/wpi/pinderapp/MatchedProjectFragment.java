@@ -1,6 +1,7 @@
 package team1008.b17.cs4518.wpi.pinderapp;
 
 
+import android.graphics.BitmapFactory;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,15 +10,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,17 +87,21 @@ public class MatchedProjectFragment extends Fragment {
 
         TextView mProjectTitle;
         TextView mProjectManager;
+        ImageView mPhotoView;
         String projectId;
+      
         public ProjectHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_match, parent, false));
             itemView.setOnClickListener(this);
             mProjectTitle = itemView.findViewById(R.id.project_title);
             mProjectManager = itemView.findViewById(R.id.project_manager);
+            mPhotoView = itemView.findViewById(R.id.project_image);
         }
 
         public void bind(String projectId) {
             this.projectId = projectId;
             final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            FirebaseStorage storage = FirebaseStorage.getInstance();
             database.getReference("projects/" + projectId + "/project_name").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -124,6 +132,13 @@ public class MatchedProjectFragment extends Fragment {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            storage.getReference("projects/" + projectId).getBytes(1024*1024*10).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    mPhotoView.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
 
                 }
             });

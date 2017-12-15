@@ -1,5 +1,6 @@
 package team1008.b17.cs4518.wpi.pinderapp;
 
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -9,15 +10,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import org.json.JSONObject;
 
@@ -65,6 +69,7 @@ public class MatcherInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         final GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
         if (acct != null) {
 
         }
@@ -72,10 +77,12 @@ public class MatcherInfoFragment extends Fragment {
         final TextView location = v.findViewById(R.id.projectLocation);
         final TextView description = v.findViewById(R.id.description);
         final TextView title = v.findViewById(R.id.projectTitle);
-        title.setText("TITLE");
+        final ImageView photo = v.findViewById(R.id.photo);
+
         database.getReference("projects/" + projectId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                title.setText(dataSnapshot.child("project_name").getValue(String.class));
                 description.setText(dataSnapshot.child("description").getValue(String.class));
                 double latitude = 0;
                 double longitude = 0;
@@ -102,6 +109,13 @@ public class MatcherInfoFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+
+        storage.getReference("projects/" + projectId).getBytes(1024*1024*10).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                photo.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
             }
         });
         mAccept = v.findViewById(R.id.accept);
