@@ -71,6 +71,7 @@ public class ProjectFragment extends Fragment {
     private Uri imageUri;
 
     String projectId;
+    private Context context;
 
     public ProjectFragment() {
 
@@ -83,6 +84,7 @@ public class ProjectFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.managed_info, container, false);
+        context = getContext();
         gcd = new Geocoder(getContext(), Locale.getDefault());
 
         if (savedInstanceState != null) {
@@ -300,7 +302,7 @@ public class ProjectFragment extends Fragment {
     public void apply() {
         if(changingData ) return;
         System.out.println("Sending info");
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(context);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         if (acct != null) {
