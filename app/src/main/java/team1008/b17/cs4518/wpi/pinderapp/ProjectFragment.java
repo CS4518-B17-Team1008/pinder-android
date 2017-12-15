@@ -32,18 +32,12 @@ import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ProjectFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- */
 public class ProjectFragment extends Fragment {
 
-    private TextView name_box;
-    private TextView status_box;
+    private EditText name_box;
+    private EditText status_box;
     private TextView location_box;
     private EditText description_box;
     private EditText contact_info_box;
@@ -55,7 +49,7 @@ public class ProjectFragment extends Fragment {
     private double latitude = 0;
     private double longitude = 0;
 
-    Bundle savedInstanceState;
+    String projectId;
 
     public ProjectFragment() {
         // Required empty public constructor
@@ -66,8 +60,14 @@ public class ProjectFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.managed_info, container, false);
+        gcd = new Geocoder(getContext(), Locale.getDefault());
 
-        this.savedInstanceState = savedInstanceState;
+        if (savedInstanceState != null) {
+            projectId = savedInstanceState.getString("PROJECT_KEY");
+        }
+        else {
+            projectId = null;
+        }
 
         name_box = v.findViewById(R.id.projectName);
         status_box = v.findViewById(R.id.projectStatus);
@@ -149,28 +149,36 @@ public class ProjectFragment extends Fragment {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (projectId != null) {
+            outState.putString("PROJECT_KEY", projectId);
+        }
+    }
+
     public void apply() {
         System.out.println("Sending info");
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         if (acct != null) {
             DatabaseReference myRef;
-            if(!savedInstanceState.containsKey("PROJECT_KEY")) {
-                myRef = database.getReference("users").child(acct.getId()).child("projects").push();
-                savedInstanceState.putString("PROJECT_KEY", myRef.getKey());
+            if(projectId == null) {
+                myRef = database.getReference("projects").push();
+                projectId = myRef.getKey();
                 System.out.println("NEW PROJ KEY: " + myRef.getKey());
             } else {
-                myRef = database.getReference("users").child(acct.getId()).child("projects").child(savedInstanceState.getString("PROJECT_KEY"));
+                myRef = database.getReference("projects").child(projectId);
                 System.out.println("OLD KEY: " + myRef.getKey());
             };
 
             myRef.child("project_name").setValue(name_box.getText().toString());
             myRef.child("status").setValue(status_box.getText().toString());
-            myRef.child("description").setValue(description_box.getText(), toString());
+            myRef.child("description").setValue(description_box.getText().toString());
             myRef.child("contact_info").setValue(contact_info_box.getText().toString());
             myRef.child("latitude").setValue(latitude);
             myRef.child("longitude").setValue(longitude);
             myRef.child("members").setValue(members_box.getText().toString());
+            myRef.child("creator").setValue(acct.getId());
         }
     }
 

@@ -39,6 +39,7 @@ public class ProjectPagerFragment extends Fragment {
             "com.bignerdranch.android.criminalintent.crime_id";
 
     private ViewPager mViewPager;
+    private FragmentStatePagerAdapter mAdapter;
     private List<String> projectList = new ArrayList<>();
 
     @Override
@@ -48,11 +49,26 @@ public class ProjectPagerFragment extends Fragment {
 
         mViewPager = (ViewPager) v.findViewById(R.id.project_view_pager);
 
+        FragmentManager fragmentManager = getFragmentManager();
+        mAdapter = new FragmentStatePagerAdapter(fragmentManager) {
+            @Override
+            public Fragment getItem(int position) {
+                return MatcherInfoFragment.newInstance(projectList.get(position));
+            }
+
+            @Override
+            public int getCount() {
+                return projectList.size();
+            }
+        };
+        mViewPager.setAdapter(mAdapter);
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         database.getReference("projects").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 projectList.add(dataSnapshot.getKey());
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -76,19 +92,7 @@ public class ProjectPagerFragment extends Fragment {
             }
         });
 
-        FragmentManager fragmentManager = getFragmentManager();
-        mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
 
-            @Override
-            public Fragment getItem(int position) {
-                return MatcherInfoFragment.newInstance(projectList.get(position));
-            }
-
-            @Override
-            public int getCount() {
-                return projectList.size();
-            }
-        });
         return v;
     }
 }

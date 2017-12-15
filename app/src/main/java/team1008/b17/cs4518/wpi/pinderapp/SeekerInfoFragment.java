@@ -133,7 +133,7 @@ public class SeekerInfoFragment extends Fragment {
         database.getReference("projects/" + projectId + "/match").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot.child("userId").getValue(String.class) == projectId) {
+                if (dataSnapshot.child("userId").getValue(String.class).equals(userId)) {
                     mAccept.setText("Accepted");
                     mAccept.setEnabled(false);
                     mDeny.setVisibility(View.INVISIBLE);
@@ -168,7 +168,7 @@ public class SeekerInfoFragment extends Fragment {
         database.getReference("projects/" + projectId + "/unmatch").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot.child("userId").getValue(String.class) == userId) {
+                if (dataSnapshot.child("userId").getValue(String.class).equals(userId)) {
                     mAccept.setVisibility(View.INVISIBLE);
                     mDeny.setText("Denied");
                     mDeny.setEnabled(false);

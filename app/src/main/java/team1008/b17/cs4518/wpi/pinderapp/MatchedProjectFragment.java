@@ -28,6 +28,7 @@ public class MatchedProjectFragment extends Fragment {
 
     RecyclerView mProjectsRecyclerView;
     List<String> projectList;
+    MatchedProjectFragment.ProjectAdapter mAdapter;
 
     public MatchedProjectFragment() {
         // Required empty public constructor
@@ -43,6 +44,7 @@ public class MatchedProjectFragment extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 projectList.add(dataSnapshot.child("projectId").getValue(String.class));
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -72,7 +74,8 @@ public class MatchedProjectFragment extends Fragment {
         View v = inflater.inflate(R.layout.matched_projects, container, false);
         mProjectsRecyclerView = v.findViewById(R.id.matched_project_view);
         mProjectsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mProjectsRecyclerView.setAdapter(new ProjectAdapter());
+        mAdapter = new ProjectAdapter();
+        mProjectsRecyclerView.setAdapter(mAdapter);
         return v;
     }
 
@@ -88,7 +91,7 @@ public class MatchedProjectFragment extends Fragment {
 
         public void bind(String projectId) {
             final FirebaseDatabase database = FirebaseDatabase.getInstance();
-            database.getReference("projects/" + projectId + "/title").addValueEventListener(new ValueEventListener() {
+            database.getReference("projects/" + projectId + "/project_name").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     mProjectTitle.setText(dataSnapshot.getValue(String.class));

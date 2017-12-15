@@ -28,6 +28,7 @@ public class SeekerPagerFragment extends Fragment {
             "com.bignerdranch.android.criminalintent.crime_id";
 
     private ViewPager mViewPager;
+    private FragmentStatePagerAdapter mAdapter;
     private List<String> userList = new ArrayList<>();
     String projectId;
 
@@ -53,11 +54,27 @@ public class SeekerPagerFragment extends Fragment {
         View v = inflater.inflate(R.layout.seeker_pager, container, false);
 
         mViewPager = (ViewPager) v.findViewById(R.id.seeker_view_pager);
+        FragmentManager fragmentManager = getFragmentManager();
+        mAdapter = new FragmentStatePagerAdapter(fragmentManager) {
+            @Override
+            public Fragment getItem(int position) {
+                return SeekerInfoFragment.newInstance(userList.get(position), projectId);
+            }
+
+            @Override
+            public int getCount() {
+                return userList.size();
+            }
+        };
+
+        mViewPager.setAdapter(mAdapter);
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         database.getReference("projects/" + projectId + "/potentialmatch").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 userList.add(dataSnapshot.child("userId").getValue(String.class));
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -81,19 +98,7 @@ public class SeekerPagerFragment extends Fragment {
             }
         });
 
-        FragmentManager fragmentManager = getFragmentManager();
-        mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
 
-            @Override
-            public Fragment getItem(int position) {
-                return SeekerInfoFragment.newInstance(userList.get(position), projectId);
-            }
-
-            @Override
-            public int getCount() {
-                return userList.size();
-            }
-        });
         return v;
     }
 }

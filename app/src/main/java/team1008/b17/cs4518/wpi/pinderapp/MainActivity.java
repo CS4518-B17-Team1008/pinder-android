@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity
         //TODO: Launch the fragment associated with the screen
 
         if (id == R.id.nav_find_project) {
-            Fragment fragment = new MatcherInfoFragment();
+            Fragment fragment = new ProjectPagerFragment();
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()

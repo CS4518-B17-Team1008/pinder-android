@@ -69,7 +69,7 @@ public class MatcherInfoFragment extends Fragment {
 
         }
         View v = inflater.inflate(R.layout.matcher, container, false);
-        final TextView location = v.findViewById(R.id.location);
+        final TextView location = v.findViewById(R.id.projectLocation);
         final TextView description = v.findViewById(R.id.description);
         final TextView title = v.findViewById(R.id.projectTitle);
         title.setText("TITLE");
@@ -150,7 +150,7 @@ public class MatcherInfoFragment extends Fragment {
         database.getReference("users/" + acct.getId() + "/potentialmatch").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot.child("projectId").getValue(String.class) == projectId) {
+                if (dataSnapshot.child("projectId").getValue(String.class).equals(projectId)) {
                     mAccept.setText("Accepted");
                     mAccept.setEnabled(false);
                     mDeny.setVisibility(View.INVISIBLE);
@@ -164,7 +164,7 @@ public class MatcherInfoFragment extends Fragment {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child("projectId").getValue(String.class) == projectId) {
+                if (dataSnapshot.child("projectId").getValue(String.class).equals(projectId)) {
                     mAccept.setVisibility(View.INVISIBLE);
                     mDeny.setText("Unmatched");
                     mDeny.setEnabled(false);
@@ -184,7 +184,7 @@ public class MatcherInfoFragment extends Fragment {
         database.getReference("users/" + acct.getId() + "/unmatch").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot.child("projectId").getValue(String.class) == projectId) {
+                if (dataSnapshot.child("projectId").getValue(String.class).equals(projectId)) {
                     mAccept.setVisibility(View.INVISIBLE);
                     mDeny.setText("Denied");
                     mDeny.setEnabled(false);
