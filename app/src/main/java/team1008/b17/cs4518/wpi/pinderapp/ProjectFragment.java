@@ -100,8 +100,10 @@ public class ProjectFragment extends Fragment {
             projectId = getArguments().getString("PROJECT_KEY");
             GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
             final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            FirebaseStorage storage = FirebaseStorage.getInstance();
             if (acct != null) {
                 DatabaseReference myRef;
+                StorageReference imageRef;
 
                 myRef = database.getReference("projects").child(projectId);
                 System.out.println("OLD KEY: " + myRef.getKey());
@@ -119,6 +121,13 @@ public class ProjectFragment extends Fragment {
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
+                    }
+                });
+                imageRef = storage.getReference("projects/" + projectId);
+                imageRef.getBytes(1024*1024*10).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        photo.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
                     }
                 });
 
