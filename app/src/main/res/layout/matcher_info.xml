@@ -65,34 +65,52 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center|bottom"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/deny"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="75dp"
-            android:layout_marginStart="75dp"
-            android:background="@color/darkGray"
-            android:fontFamily="sans-serif-condensed"
-            android:text="Deny"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
+            android:layout_gravity="center|bottom"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/accept"
-            android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/deny"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="75dp"
+                android:layout_marginStart="75dp"
+                android:background="@color/darkGray"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Deny"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/accept"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:layout_marginStart="18dp"
+                android:background="@color/darkGray"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Accept"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/back2matches"
+            android:layout_width="125dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
-            android:layout_marginStart="18dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
             android:background="@color/darkGray"
-            android:fontFamily="sans-serif-condensed"
-            android:text="Accept"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
+            app:srcCompat="@drawable/ic_back_arrow" />
 
     </LinearLayout>
 

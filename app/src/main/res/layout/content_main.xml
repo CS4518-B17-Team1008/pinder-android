@@ -5,6 +5,9 @@
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/puzzlebg"
+    android:backgroundTint="@color/darkGray"
+    android:backgroundTintMode="multiply"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="team1008.b17.cs4518.wpi.pinderapp.MainActivity"
     tools:showIn="@layout/app_bar_main">
