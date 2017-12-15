@@ -131,7 +131,7 @@ public class ManagedProjectFragment extends Fragment {
 
                 }
             });
-            storage.getReference("projects/" + projectId).getBytes(1024*1024*10).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            storage.getReference("projects/" + projectId).getBytes(1024*1024*3).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     mPhotoView.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
