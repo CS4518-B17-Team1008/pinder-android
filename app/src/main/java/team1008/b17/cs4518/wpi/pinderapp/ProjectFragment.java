@@ -1,7 +1,11 @@
 package team1008.b17.cs4518.wpi.pinderapp;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -17,20 +21,28 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.w3c.dom.Text;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.util.List;
 import java.util.Locale;
 
@@ -42,12 +54,16 @@ public class ProjectFragment extends Fragment {
     private EditText description_box;
     private EditText contact_info_box;
     private TextView members_box;
+    private ImageView photo;
 
     private Geocoder gcd;
     private static final int REQUEST_LOCATION = 1;
 
     private double latitude = 0;
     private double longitude = 0;
+
+    private static final int RESULT_LOAD_IMG = 1;
+    private Uri imageUri;
 
     String projectId;
 
@@ -75,6 +91,7 @@ public class ProjectFragment extends Fragment {
         description_box = v.findViewById(R.id.edit_description);
         contact_info_box = v.findViewById(R.id.edit_contactInfo);
         members_box = v.findViewById(R.id.members);
+        photo = v.findViewById(R.id.photo);
 
         v.findViewById(R.id.requestLocation2).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,6 +151,15 @@ public class ProjectFragment extends Fragment {
             }
         });
 
+        photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
+            }
+        });
+
         return v;
     }
 
@@ -159,9 +185,11 @@ public class ProjectFragment extends Fragment {
     public void apply() {
         System.out.println("Sending info");
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
+        FirebaseStorage storage = FirebaseStorage.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         if (acct != null) {
             DatabaseReference myRef;
+            StorageReference imageRef;
             if(projectId == null) {
                 myRef = database.getReference("projects").push();
                 projectId = myRef.getKey();
@@ -170,7 +198,8 @@ public class ProjectFragment extends Fragment {
                 myRef = database.getReference("projects").child(projectId);
                 System.out.println("OLD KEY: " + myRef.getKey());
             };
-
+            imageRef = storage.getReference("projects").child(projectId);
+            imageRef.putFile(imageUri);
             myRef.child("project_name").setValue(name_box.getText().toString());
             myRef.child("status").setValue(status_box.getText().toString());
             myRef.child("description").setValue(description_box.getText().toString());
@@ -232,6 +261,27 @@ public class ProjectFragment extends Fragment {
                     Snackbar.make(getView(), "ERROR: Cannot get your current location", 2).show();
                 }
             });
+        }
+    }
+
+    @Override
+    public void onActivityResult(int reqCode, int resultCode, Intent data) {
+        super.onActivityResult(reqCode, resultCode, data);
+        if (reqCode == RESULT_LOAD_IMG) {
+            if (resultCode == Activity.RESULT_OK) {
+                try {
+                    imageUri = data.getData();
+                    final InputStream imageStream = getActivity().getApplicationContext().getContentResolver().openInputStream(imageUri);
+                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    photo.setImageBitmap(selectedImage);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    Snackbar.make(photo, "ERROR: Cannot read image", 2).show();
+                }
+
+            } else {
+                Snackbar.make(photo, "WARNING: No image picked", 2).show();
+            }
         }
     }
 
