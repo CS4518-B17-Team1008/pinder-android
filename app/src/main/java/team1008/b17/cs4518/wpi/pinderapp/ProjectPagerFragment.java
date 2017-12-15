@@ -3,6 +3,7 @@ package team1008.b17.cs4518.wpi.pinderapp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
@@ -65,30 +67,54 @@ public class ProjectPagerFragment extends Fragment {
         };
         mViewPager.setAdapter(mAdapter);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getContext());
-        database.getReference("projects").addChildEventListener(new ChildEventListener() {
+        database.getReference("users/" + acct.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (!dataSnapshot.child("creator").getValue(String.class).equals(acct.getId())) {
-                    projectList.add(dataSnapshot.getKey());
-                }
-                mAdapter.notifyDataSetChanged();
-            }
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final Location uLocation = new Location("");
+                uLocation.setLatitude(dataSnapshot.child("latitude").getValue(Double.class));
+                uLocation.setLongitude(dataSnapshot.child("longitude").getValue(Double.class));
+                final int maxDistance = dataSnapshot.child("search_distance").getValue(Integer.class);
+                database.getReference("projects").addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        final Location pLocation = new Location("");
+                        pLocation.setLatitude(dataSnapshot.child("latitude").getValue(Double.class));
+                        pLocation.setLongitude(dataSnapshot.child("longitude").getValue(Double.class));
+                        // check if this project is not the one you created yourself
+                        // as well that it's actually close to you
+                        // in a real app this should all be done server side
+                        if (!dataSnapshot.child("creator").getValue(String.class).equals(acct.getId()) &&
+                                uLocation.distanceTo(pLocation) < maxDistance*1000) {
+                            projectList.add(dataSnapshot.getKey());
+                            System.out.println("Found one!");
+                        }
+                        System.out.println(uLocation.distanceTo(pLocation));
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        mAdapter.notifyDataSetChanged();
+                    }
 
-            }
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    }
 
-            }
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    }
 
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
@@ -96,6 +122,7 @@ public class ProjectPagerFragment extends Fragment {
 
             }
         });
+
 
 
         return v;
