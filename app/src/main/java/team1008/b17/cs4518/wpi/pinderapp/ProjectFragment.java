@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
@@ -54,16 +55,19 @@ public class ProjectFragment extends Fragment {
     private double latitude = 0;
     private double longitude = 0;
 
+    Bundle savedInstanceState;
+
     public ProjectFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.managed_info, container, false);
+
+        this.savedInstanceState = savedInstanceState;
 
         name_box = v.findViewById(R.id.projectName);
         status_box = v.findViewById(R.id.projectStatus);
@@ -77,6 +81,56 @@ public class ProjectFragment extends Fragment {
             public void onClick(View view) {
                 System.out.println("Get location clicked");
                 getLocation(view);
+                apply();
+            }
+        });
+
+
+        name_box.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                apply();
+                return false;
+            }
+        });
+
+        status_box.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                apply();
+                return false;
+            }
+        });
+
+        location_box.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                apply();
+                return false;
+            }
+        });
+
+        description_box.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                apply();
+                return false;
+            }
+        });
+
+        contact_info_box.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                apply();
+                return false;
+            }
+        });
+
+        members_box.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                apply();
+                return false;
             }
         });
 
@@ -96,10 +150,20 @@ public class ProjectFragment extends Fragment {
     }
 
     public void apply() {
+        System.out.println("Sending info");
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         if (acct != null) {
-            DatabaseReference myRef = database.getReference("users").child(acct.getId()).child("projects").push();
+            DatabaseReference myRef;
+            if(!savedInstanceState.containsKey("PROJECT_KEY")) {
+                myRef = database.getReference("users").child(acct.getId()).child("projects").push();
+                savedInstanceState.putString("PROJECT_KEY", myRef.getKey());
+                System.out.println("NEW PROJ KEY: " + myRef.getKey());
+            } else {
+                myRef = database.getReference("users").child(acct.getId()).child("projects").child(savedInstanceState.getString("PROJECT_KEY"));
+                System.out.println("OLD KEY: " + myRef.getKey());
+            };
+
             myRef.child("project_name").setValue(name_box.getText().toString());
             myRef.child("status").setValue(status_box.getText().toString());
             myRef.child("description").setValue(description_box.getText(), toString());
@@ -114,11 +178,13 @@ public class ProjectFragment extends Fragment {
     public void getLocation(View v) {
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
+            System.out.println("Getting permission for location");
             // Check Permissions Now
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
                     REQUEST_LOCATION);
         } else { // Permission granted
+            System.out.println("got permission for location");
             Task locationTask = LocationServices.getFusedLocationProviderClient(getActivity())
                     .getLastLocation();
             locationTask.addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
@@ -127,6 +193,8 @@ public class ProjectFragment extends Fragment {
                     if (location != null) {
                         latitude = location.getLatitude();
                         longitude = location.getLongitude();
+                        System.out.println("Latitude: " + latitude);
+                        System.out.println("Longitude: " + longitude);
                         try {
                             List<Address> addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                             if (!addresses.isEmpty()) {
@@ -144,6 +212,8 @@ public class ProjectFragment extends Fragment {
                         }
 
 
+                    } else {
+                        System.out.println("location null");
                     }
                 }
             });
@@ -152,7 +222,6 @@ public class ProjectFragment extends Fragment {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Snackbar.make(getView(), "ERROR: Cannot get your current location", 2).show();
-                    mShouldTrigger = true;
                 }
             });
         }
