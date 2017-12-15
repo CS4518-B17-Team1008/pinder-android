@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageSwitcher
+        android:id="@+id/img_switcher"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="25dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:scaleType="fitXY"
+                android:background="@android:color/darker_gray"
+                android:cropToPadding="true" />
+
+            <ImageView
+                android:id="@+id/background_slate"
+                android:layout_width="50dp"
+                android:layout_height="100dp"
+                android:layout_alignBottom="@+id/photo"
+                android:layout_alignEnd="@+id/photo"
+                android:layout_alignLeft="@+id/photo"
+                android:layout_alignRight="@+id/photo"
+                android:layout_alignStart="@+id/photo"
+                app:srcCompat="@color/colorAccent" />
+
+            <TextView
+                android:id="@+id/seekerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/photo"
+                android:layout_alignLeft="@+id/photo"
+                android:layout_alignRight="@+id/photo"
+                android:layout_alignStart="@+id/photo"
+                android:layout_alignTop="@+id/background_slate"
+                android:fontFamily="sans-serif-condensed"
+                android:paddingLeft="8dp"
+                android:text="Seeker Name"
+                android:textColor="@color/common_google_signin_btn_text_light_pressed"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/projectLocation"
+                android:layout_alignEnd="@+id/photo"
+                android:layout_alignLeft="@+id/photo"
+                android:layout_alignRight="@+id/photo"
+                android:layout_alignStart="@+id/photo"
+                android:layout_below="@+id/seekerName"
+                android:fontFamily="sans-serif-condensed"
+                android:paddingLeft="8dp"
+                android:text="Short Description"
+                android:textColor="@color/common_google_signin_btn_text_light_pressed"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/projectLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/photo"
+                android:layout_alignEnd="@+id/photo"
+                android:layout_alignLeft="@+id/photo"
+                android:layout_alignRight="@+id/photo"
+                android:layout_alignStart="@+id/photo"
+                android:fontFamily="sans-serif-condensed"
+                android:paddingLeft="8dp"
+                android:textColor="@color/common_google_signin_btn_text_light_pressed"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
+    </ImageSwitcher>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/deny"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:background="@color/darkGray"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Deny"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/accept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@color/darkGray"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Accept"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+</LinearLayout>
