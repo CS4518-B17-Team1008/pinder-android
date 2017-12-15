@@ -83,8 +83,8 @@ public class MatcherInfoFragment extends Fragment {
                     latitude = dataSnapshot.child("latitude").getValue(Double.class);
                     longitude = dataSnapshot.child("longitude").getValue(Double.class);
                 }
-                Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
                 try {
+                    Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
                     List<Address> addresses = gcd.getFromLocation(latitude, longitude, 1);
                     if (!addresses.isEmpty()) {
                         // City, State, Country
@@ -93,6 +93,8 @@ public class MatcherInfoFragment extends Fragment {
                                 ", " + addresses.get(0).getCountryName());
                     }
                 } catch (IOException e) {
+                    Snackbar.make(getView(), "WARNING: Cannot retrieve city name from project latitude and longitude", 2).show();
+                } catch (NullPointerException e) {
                     Snackbar.make(getView(), "WARNING: Cannot retrieve city name from project latitude and longitude", 2).show();
                 }
             }
