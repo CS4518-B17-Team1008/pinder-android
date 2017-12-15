@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -64,10 +66,13 @@ public class ProjectPagerFragment extends Fragment {
         mViewPager.setAdapter(mAdapter);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getContext());
         database.getReference("projects").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                projectList.add(dataSnapshot.getKey());
+                if (!dataSnapshot.child("creator").getValue(String.class).equals(acct.getId())) {
+                    projectList.add(dataSnapshot.getKey());
+                }
                 mAdapter.notifyDataSetChanged();
             }
 

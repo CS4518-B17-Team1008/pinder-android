@@ -18,7 +18,7 @@ public class SeekerPagerActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Bundle b = getIntent().getExtras();
-        Fragment fragment = SeekerPagerFragment.newInstance(b.getString("projectId"));
+        Fragment fragment = SeekerPagerFragment.newInstance(b.getString("projectId"))   ;
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
