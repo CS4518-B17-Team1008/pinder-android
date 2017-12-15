@@ -15,6 +15,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.TextureView;
@@ -74,6 +76,8 @@ public class ProjectFragment extends Fragment {
 
     }
 
+    boolean changingData = true;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -108,6 +112,7 @@ public class ProjectFragment extends Fragment {
                 myRef = database.getReference("projects").child(projectId);
                 System.out.println("OLD KEY: " + myRef.getKey());
 
+
                 myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -116,6 +121,7 @@ public class ProjectFragment extends Fragment {
                         description_box.setText(dataSnapshot.child("description").getValue().toString());
                         contact_info_box.setText(dataSnapshot.child("contact_info").getValue().toString());
                         members_box.setText(dataSnapshot.child("members").getValue().toString());
+                        changingData = false;
                     }
 
                     @Override
@@ -133,6 +139,8 @@ public class ProjectFragment extends Fragment {
 
             }
 
+
+
         }
 
         v.findViewById(R.id.requestLocation2).setOnClickListener(new View.OnClickListener() {
@@ -145,51 +153,106 @@ public class ProjectFragment extends Fragment {
         });
 
 
-        name_box.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        name_box.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 apply();
-                return false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 
-        status_box.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        status_box.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 apply();
-                return false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 
-        location_box.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        location_box.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 apply();
-                return false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 
-        description_box.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+        description_box.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 apply();
-                return false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 
-        contact_info_box.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        contact_info_box.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 apply();
-                return false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 
-        members_box.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        members_box.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 apply();
-                return false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 
@@ -225,6 +288,7 @@ public class ProjectFragment extends Fragment {
     }
 
     public void apply() {
+        if(changingData) return;
         System.out.println("Sending info");
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -241,7 +305,9 @@ public class ProjectFragment extends Fragment {
                 System.out.println("OLD KEY: " + myRef.getKey());
             };
             imageRef = storage.getReference("projects").child(projectId);
-            imageRef.putFile(imageUri);
+            if(imageUri != null){
+                imageRef.putFile(imageUri);
+            }
             myRef.child("project_name").setValue(name_box.getText().toString());
             myRef.child("status").setValue(status_box.getText().toString());
             myRef.child("description").setValue(description_box.getText().toString());
