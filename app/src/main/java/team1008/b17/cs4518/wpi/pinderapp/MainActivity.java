@@ -189,6 +189,13 @@ public class MainActivity extends AppCompatActivity
                     });
 
         }
+        if(id == R.id.action_create_project) {
+            Fragment fragment = new ProjectFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
+        }
 
         return super.onOptionsItemSelected(item);
     }
