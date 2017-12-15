@@ -90,6 +90,7 @@ public class ProjectFragment extends Fragment {
         }
         else {
             projectId = null;
+            changingData = false;
         }
 
         name_box = v.findViewById(R.id.projectName);
@@ -256,6 +257,15 @@ public class ProjectFragment extends Fragment {
             }
         });
 
+        members_box.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(), SeekerPagerActivity.class);
+                i.putExtra("projectId", projectId);
+                startActivity(i);
+            }
+        });
+
         photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -288,7 +298,7 @@ public class ProjectFragment extends Fragment {
     }
 
     public void apply() {
-        if(changingData) return;
+        if(changingData ) return;
         System.out.println("Sending info");
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
         FirebaseStorage storage = FirebaseStorage.getInstance();
