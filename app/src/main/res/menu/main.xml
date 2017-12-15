@@ -11,4 +11,8 @@
         android:orderInCategory="100"
         android:title="Signout"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_create_project"
+        android:orderInCategory="101"
+        android:title="Create Project" />
 </menu>
